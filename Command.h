@@ -6,36 +6,49 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 
 struct Option
 {
-    char token;
-    std::string word;
-}
+    char token; //"-x"
+    std::string word; //"--abc"
+};
 
 template <typename FuncClass>
 class Command
 {
     public:
-        Command(FuncClass& obj, void (FuncClass::*mptr)(), char token, const std::string word) : token(token), word(word)
+        Command(FuncClass* obj, std::string name, void (FuncClass::*mptr)(), void (FuncClass::*mptr_val)(std::vector<std::string>)=0) : name(name), obj(obj), mptr(mptr), mptr_val(mptr_val)
         {
-            std::cout << "Simple constructor called..." << std::endl;
-            (obj.*mptr)();
+            std::cout << "Created object of class 'Command' - name=" << name << std::endl;
+            std::cout << "mptr=" << mptr << " mptr_val=" << mptr_val << std::endl;
+            std::cout << "Executing mptr..." << std::endl;
+            //((*obj).*mptr)();
+            //test();
+            //( (*obj).*mptr )();
         }
-        //Command( void (FuncClass::*func)(), char token, const std::string word = "" );
     private:
-        const char token; //"-x"
-        const std::string word; //"--abc"
-        void (FuncClass::*func)(); //pointer to function
+        std::string name;
+        FuncClass* obj; //object to execute function on
+        void (FuncClass::*mptr)(); //pointer to function with no parameters
+        void (FuncClass::*mptr_val)(std::vector<std::string>); //pointer to function with parameter
+        std::vector<Option> options;
 
     public:
-        char get_token()
+        std::string get_name()
         {
-            return token;
+            return name;
         }
-        std::string get_word()
+        void execute ()
         {
-            return word;
+            std::cout << "Enter execute()..." << std::endl;
+            if (mptr != 0)
+                ((*obj).*mptr)();
+        }
+        void execute(std::vector<std::string> values)
+        {
+            if (mptr_val != 0)
+                ((*obj).*mptr_val)(values);
         }
 };
 
