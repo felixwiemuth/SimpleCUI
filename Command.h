@@ -8,11 +8,11 @@
 #include <iostream>
 #include <vector>
 
-struct Option
-{
-    char token; //"-x"
-    std::string word; //"--abc"
-};
+//struct Option
+//{
+//    char token; //"-x"
+//    std::string word; //"--abc"
+//};
 
 template <typename FuncClass>
 class Command
@@ -20,19 +20,14 @@ class Command
     public:
         Command(FuncClass* obj, std::string name, void (FuncClass::*mptr)(), void (FuncClass::*mptr_val)(std::vector<std::string>)=0) : name(name), obj(obj), mptr(mptr), mptr_val(mptr_val)
         {
-            std::cout << "Created object of class 'Command' - name=" << name << std::endl;
-            std::cout << "mptr=" << mptr << " mptr_val=" << mptr_val << std::endl;
-            std::cout << "Executing mptr..." << std::endl;
-            //((*obj).*mptr)();
-            //test();
-            //( (*obj).*mptr )();
+
         }
     private:
         std::string name;
         FuncClass* obj; //object to execute function on
         void (FuncClass::*mptr)(); //pointer to function with no parameters
         void (FuncClass::*mptr_val)(std::vector<std::string>); //pointer to function with parameter
-        std::vector<Option> options;
+        //std::vector<Option> options;
 
     public:
         std::string get_name()
@@ -41,7 +36,7 @@ class Command
         }
         void execute ()
         {
-            std::cout << "Enter execute()..." << std::endl;
+            //std::cout << "Enter execute()..." << std::endl;
             if (mptr != 0)
                 ((*obj).*mptr)();
         }
