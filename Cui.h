@@ -10,17 +10,17 @@
 #include <vector>
 #include <list>
 
-struct Instruction
-{
-    std::string option; //ooption X called ("-X")
-    std::vector<std::string> values; //values A, B, C, ... added to the option ("-X A B C")
-
-    Instruction(std::string option, std::vector<std::string> values)
-    {
-        this->option = option;
-        this->values = values;
-    }
-};
+//struct Instruction
+//{
+//    std::string option; //ooption X called ("-X")
+//    std::vector<std::string> values; //values A, B, C, ... added to the option ("-X A B C")
+//
+//    Instruction(std::string option, std::vector<std::string> values)
+//    {
+//        this->option = option;
+//        this->values = values;
+//    }
+//};
 
 template <typename FuncClass>
 class Cui
@@ -70,7 +70,7 @@ class Cui
 
                 words.pop_front();
                 //words[0]...words[n] == values
-                std::cout << "WORDS.SIZE=" << words.size() << std::endl;
+                //std::cout << "WORDS.SIZE=" << words.size() << std::endl;
                 if (words.size() == 0)
                     cmds[cmd].execute();
                 else
