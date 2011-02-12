@@ -14,7 +14,7 @@
 //    std::string word; //"--abc"
 //};
 
-template <typename FuncClass>
+template <class FuncClass>
 class Command
 {
     public:

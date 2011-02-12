@@ -7,6 +7,7 @@
 #include "Command.h"
 
 #include <boost/algorithm/string/split.hpp>
+#include <boost/lexical_cast.hpp>
 #include <vector>
 #include <list>
 
@@ -22,9 +23,12 @@ struct Instruction
     }
 };
 
-template <typename FuncClass>
+template <class FuncClass>
 class Cui
 {
+    //static members
+    static std::string error_msg;
+
     public:
         Cui()
         {
@@ -74,7 +78,10 @@ class Cui
                 if (words.size() == 0)
                     cmds[cmd].execute();
                 else
+                {
                     cmds[cmd].execute(std::vector<std::string>(words.begin(), words.end()));
+                }
+
 
 
 //                std::vector<Instruction> instr;
