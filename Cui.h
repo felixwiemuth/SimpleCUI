@@ -28,22 +28,20 @@ class Cui
 {
     //static members
     static std::string error_msg;
-    static std::string error_wrong_param_t;
 
     public:
-        Cui(bool mode) : mode(mode)
+        Cui()
         {
-            error_wrong_param_t = "Error: wrong paramter type!";
+
         }
     private:
-        bool mode; //false = standard parameter - true = cast paramter to ParamT
-        std::vector< Command<FuncClass, ParamT> > cmds;
+        std::vector< Command<FuncClass> > cmds;
     public:
-        void add_command(FuncClass* obj, std::string name, void (FuncClass::*mptr)(), void (FuncClass::*mptr_val)(ParamT)=0)
+        void add_command(FuncClass* obj, std::string name, void (FuncClass::*mptr)(), void (FuncClass::*mptr_val)(std::vector<std::string>)=0)
         {
-            cmds.push_back(Command<FuncClass, ParamT>(obj, name, mptr, mptr_val));
+            cmds.push_back(Command<FuncClass>(obj, name, mptr, mptr_val));
         }
-        void add_command(Command<FuncClass, ParamT>& cmd)
+        void add_command(Command<FuncClass>& cmd)
         {
             cmds.push_back(cmd);
         }
@@ -81,19 +79,7 @@ class Cui
                     cmds[cmd].execute();
                 else
                 {
-                    if (mode == false)
-                        cmds[cmd].execute(std::vector<std::string>(words.begin(), words.end()));
-                    else
-                    {
-                        try
-                        {
-                            cmds[cmd].execute( boost::lexical_cast<ParamT>(words.front()) );
-                        }
-                        catch (boost::bad_lexical_cast&)
-                        {
-                            std::cout << error_wrong_param_t << std::endl;
-                        }
-                    }
+                    cmds[cmd].execute(std::vector<std::string>(words.begin(), words.end()));
                 }
 
 

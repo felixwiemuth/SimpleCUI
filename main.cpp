@@ -31,10 +31,6 @@ class TestClass
         {
             cout << "first val=" << myvals[0] << endl;
         }
-        void param_meth(int x)
-        {
-            cout << "x*x=" << x*x << endl;
-        }
 };
 
 int main()
@@ -52,16 +48,15 @@ int main()
     TestClass myobj;
 //    Command<TestClass> cmd(&myobj, "mycmdname", &TestClass::sample_method);
 //    cout << "adress of sample_method: " << &TestClass::sample_method << endl;
-    Cui<TestClass> cui(false);
-    Cui<TestClass, int> cui_int(true);
-    cui_int.add_command(&myobj, "int", 0, &TestClass::param_meth);
+    Cui<TestClass> cui;
+
     Command<TestClass> comm(&myobj, "exit", &TestClass::exit_program);
     //cui.add_command(comm);
     cui.add_command(comm);
     cui.add_command(&myobj, "fun", 0, 0);
     cui.add_command(&myobj, "vals", 0, &TestClass::mymeth);
     //cui.add_command(&myobj, "exit", &TestClass::exit_program);
-    cui_int.start();
+
     cui.start();
 
 //    Command<TestClass> cmd(myobj, &TestClass::sample_method, '-s', "-sample");
