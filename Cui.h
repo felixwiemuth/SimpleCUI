@@ -23,7 +23,7 @@
 //    }
 //};
 
-template < class FuncClass, class ParamT = std::vector<std::string> >
+template <class FuncClass>
 class Cui
 {
     //static members
