@@ -9,33 +9,28 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/lexical_cast.hpp>
 #include <vector>
-#include <list>
 
-struct Instruction
-{
-    std::string option; //ooption X called ("-X")
-    std::vector<std::string> values; //values A, B, C, ... added to the option ("-X A B C")
-
-    Instruction(std::string option, std::vector<std::string> values)
-    {
-        this->option = option;
-        this->values = values;
-    }
-};
 
 template <class FuncClass>
 class Cui
 {
-    //static members
-    static std::string error_msg;
-
     public:
         Cui()
         {
-
+            err_no_command = "is not a command!";
+            err_wrong_call_1 = "Error: No function defined to call '";
+            err_wrong_call_2 = "' without parameters!";
+            err_wrong_call_p_1 = "Error: No function defined to call '";
+            err_wrong_call_p_2 = "' with parameters!";
         }
     private:
-        std::vector< Command<FuncClass> > cmds;
+        std::vector< Command<FuncClass> > cmds; //all possible commands
+        //error messages
+        std::string err_no_command;
+        std::string err_wrong_call_1;
+        std::string err_wrong_call_2;
+        std::string err_wrong_call_p_1;
+        std::string err_wrong_call_p_2;
     public:
         void add_command(FuncClass* obj, std::string name, void (FuncClass::*mptr)(), void (FuncClass::*mptr_val)(std::vector<std::string>)=0)
         {
@@ -50,10 +45,11 @@ class Cui
             std::string in;
             while(true)
             {
+                std::cout << std::endl;
                 std::cout << "> ";
                 getline(std::cin, in);
                 std::cout << std::endl;
-                std::list<std::string> words;
+                std::vector<std::string> words;
                 boost::split(words, in, [](const char c)->bool{return c == ' ';});
                 //check if command
                 int cmd = -1;
@@ -65,40 +61,24 @@ class Cui
                         break;
                     }
                 }
-                if (cmd == -1)
+                if (cmd == -1) //not a command
                 {
-                    //not a command
-                    std::cout << "ERROR: not a command" << std::endl; //DEBUG
+                    std::cout << "Error: '" << words.front() << "' " << err_no_command << std::endl;
                     continue;
                 }
-
-                words.pop_front();
-                //words[0]...words[n] == values
-                std::cout << "WORDS.SIZE=" << words.size() << std::endl;
-                if (words.size() == 0)
-                    cmds[cmd].execute();
+                //words[1]...words[n] == values
+                if (words.size() == 1)
+                {
+                    if (!cmds[cmd].execute())
+                        std::cout << err_wrong_call_1 << words.front() << err_wrong_call_2 << std::endl;
+                }
                 else
                 {
-                    cmds[cmd].execute(std::vector<std::string>(words.begin(), words.end()));
+                    if (!cmds[cmd].execute(std::vector<std::string>(words.begin()+1, words.end())))
+                        std::cout << err_wrong_call_p_1 << words.front() << err_wrong_call_p_2 << std::endl;
                 }
-
-
-
-//                std::vector<Instruction> instr;
-//                for (std::vector<std::string>::iterator it = words.begin(); it != words.end(); ++it)
-//                {
-//                    if ((*it)[0] != '-')
-//                    {
-//                        std::vector<std::string> options;
-//
-//                    }
-//
-//                }
-
             }
-
         }
-
 };
 
 

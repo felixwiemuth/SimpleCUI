@@ -8,11 +8,6 @@
 #include <iostream>
 #include <vector>
 
-//struct Option
-//{
-//    char token; //"-x"
-//    std::string word; //"--abc"
-//};
 
 template <class FuncClass>
 class Command
@@ -23,27 +18,33 @@ class Command
 
         }
     private:
-        std::string name;
+        std::string name; //comman name by which it is called
         FuncClass* obj; //object to execute function on
         void (FuncClass::*mptr)(); //pointer to function with no parameters
         void (FuncClass::*mptr_val)(std::vector<std::string>); //pointer to function with parameter
-        //std::vector<Option> options;
 
     public:
         std::string get_name()
         {
             return name;
         }
-        void execute ()
+        bool execute ()
         {
-            //std::cout << "Enter execute()..." << std::endl;
             if (mptr != 0)
+            {
                 ((*obj).*mptr)();
+                return true;
+            }
+            return false;
         }
-        void execute(std::vector<std::string> values)
+        bool execute(std::vector<std::string> values)
         {
             if (mptr_val != 0)
+            {
                 ((*obj).*mptr_val)(values);
+                return true;
+            }
+            return false;
         }
 };
 
