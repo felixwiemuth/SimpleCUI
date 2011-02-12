@@ -18,7 +18,7 @@ class Command
 
         }
     private:
-        std::string name; //comman name by which it is called
+        std::string name; //command name by which it is called
         FuncClass* obj; //object to execute function on
         void (FuncClass::*mptr)(); //pointer to function with no parameters
         void (FuncClass::*mptr_val)(std::vector<std::string>); //pointer to function with parameter
