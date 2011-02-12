@@ -14,11 +14,11 @@
 //    std::string word; //"--abc"
 //};
 
-template <typename FuncClass>
+template < class FuncClass, class ParamT = std::vector<std::string> >
 class Command
 {
     public:
-        Command(FuncClass* obj, std::string name, void (FuncClass::*mptr)(), void (FuncClass::*mptr_val)(std::vector<std::string>)=0) : name(name), obj(obj), mptr(mptr), mptr_val(mptr_val)
+        Command(FuncClass* obj, std::string name, void (FuncClass::*mptr)(), void (FuncClass::*mptr_val)(ParamT)=0) : name(name), obj(obj), mptr(mptr), mptr_val(mptr_val)
         {
 
         }
@@ -26,7 +26,7 @@ class Command
         std::string name;
         FuncClass* obj; //object to execute function on
         void (FuncClass::*mptr)(); //pointer to function with no parameters
-        void (FuncClass::*mptr_val)(std::vector<std::string>); //pointer to function with parameter
+        void (FuncClass::*mptr_val)(ParamT); //pointer to function with parameter
         //std::vector<Option> options;
 
     public:
@@ -40,7 +40,7 @@ class Command
             if (mptr != 0)
                 ((*obj).*mptr)();
         }
-        void execute(std::vector<std::string> values)
+        void execute(ParamT values)
         {
             if (mptr_val != 0)
                 ((*obj).*mptr_val)(values);
