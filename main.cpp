@@ -40,11 +40,11 @@ int main()
 
     Command<TestClass> comm(&myobj, "exit", &TestClass::exit_program);
 
-    cui.add_command(comm);
+    //cui.add_command(comm);
     cui.add_command(&myobj, "fun", 0, 0);
     cui.add_command(&myobj, "vals", 0, &TestClass::mymeth);
 
-    cui.start();
+    cui.run();
 
     return 0;
 }
