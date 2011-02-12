@@ -17,7 +17,11 @@ class Cui
     public:
         Cui()
         {
-            err_no_command = "is not a command!";
+            exit_cmd = "exit";
+            msg_exit = "Leaving CUI environment...";
+            err = "Error: ";
+            err_no_command_1 = "'";
+            err_no_command_2 = "' is not a command!";
             err_wrong_call_1 = "Error: No function defined to call '";
             err_wrong_call_2 = "' without parameters!";
             err_wrong_call_p_1 = "Error: No function defined to call '";
@@ -25,8 +29,13 @@ class Cui
         }
     private:
         std::vector< Command<FuncClass> > cmds; //all possible commands
+        std::string exit_cmd; //command to leave 'run()' (can be overwritten by commands in 'cmds')
+        //messages
+        std::string msg_exit;
         //error messages
-        std::string err_no_command;
+        std::string err;
+        std::string err_no_command_1;
+        std::string err_no_command_2;
         std::string err_wrong_call_1;
         std::string err_wrong_call_2;
         std::string err_wrong_call_p_1;
@@ -40,7 +49,7 @@ class Cui
         {
             cmds.push_back(cmd);
         }
-        void start()
+        void run()
         {
             std::string in;
             while(true)
@@ -63,7 +72,13 @@ class Cui
                 }
                 if (cmd == -1) //not a command
                 {
-                    std::cout << "Error: '" << words.front() << "' " << err_no_command << std::endl;
+                    //if no 'exit_cmd' command is defined, typing 'exit_cmd' leads to leave the 'run()' method of 'Cui'
+                    if (in == exit_cmd)
+                    {
+                        std::cout << msg_exit << std::endl;
+                        return;
+                    }
+                    std::cout << err << err_no_command_1 << words.front() << err_no_command_2 << std::endl;
                     continue;
                 }
                 //words[1]...words[n] == values
