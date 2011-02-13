@@ -38,11 +38,14 @@ int main()
     TestClass myobj;
     Cui<TestClass> cui;
 
-    Command<TestClass> comm(&myobj, "exit", &TestClass::exit_program);
+//    Command<TestClass> comm(&myobj, "exit", &TestClass::exit_program);
+    vector<string> testvals;
+    testvals.push_back("TestValue");
 
+    cui["valmeth"].set(Command<TestClass>(&myobj, 0, &TestClass::mymeth)).execute(testvals);
     //cui.add_command(comm);
-    cui.add_command(&myobj, "fun", 0, 0);
-    cui.add_command(&myobj, "vals", 0, &TestClass::mymeth);
+//    cui.add_command(&myobj, "fun", 0, 0);
+//    cui.add_command(&myobj, "vals", 0, &TestClass::mymeth);
 
     cui.run();
 
