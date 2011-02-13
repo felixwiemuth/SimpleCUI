@@ -90,8 +90,10 @@ class Cui
                             break;
                         case 3:
                             std::cout << err << err_wrong_call_1 << words.front() << err_wrong_call_2 << std::endl;
+                            break;
                         case 4:
                             std::cout << err << err_wrong_call_p_1 << words.front() << err_wrong_call_p_2 << std::endl;
+                            break;
                         default:
                             break;
                     }
