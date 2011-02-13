@@ -9,6 +9,7 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/lexical_cast.hpp>
 #include <vector>
+#include <map>
 
 
 template <class FuncClass>
@@ -28,7 +29,7 @@ class Cui
             err_wrong_call_p_2 = "' with parameters!";
         }
     private:
-        std::vector< Command<FuncClass> > cmds; //all possible commands
+        std::map< std::string, Command<FuncClass> > cmds; //all possible commands
         std::string exit_cmd; //command to leave 'run()' (can be overwritten by commands in 'cmds')
         //messages
         std::string msg_exit;
@@ -41,14 +42,14 @@ class Cui
         std::string err_wrong_call_p_1;
         std::string err_wrong_call_p_2;
     public:
-        void add_command(FuncClass* obj, std::string name, void (FuncClass::*mptr)(), void (FuncClass::*mptr_val)(std::vector<std::string>)=0)
-        {
-            cmds.push_back(Command<FuncClass>(obj, name, mptr, mptr_val));
-        }
-        void add_command(Command<FuncClass>& cmd)
-        {
-            cmds.push_back(cmd);
-        }
+//        void add_command(FuncClass* obj, std::string name, void (FuncClass::*mptr)(), void (FuncClass::*mptr_val)(std::vector<std::string>)=0)
+//        {
+//            cmds.push_back(Command<FuncClass>(obj, name, mptr, mptr_val));
+//        }
+//        void add_command(Command<FuncClass>& cmd)
+//        {
+//            cmds.push_back(cmd);
+//        }
         void run()
         {
             std::string in;
@@ -61,36 +62,29 @@ class Cui
                 std::vector<std::string> words;
                 boost::split(words, in, [](const char c)->bool{return c == ' ';});
                 //check if command
-                int cmd = -1;
-                for (int i = 0; i < cmds.size(); i++)
+                typename std::map< std::string, Command<FuncClass> >::iterator it = cmds.find(words.front());
+                if (it != cmds.end())
                 {
-                    if (cmds[i].get_name() == words.front())
+                    //words[0] == command -- words[1]...words[n] == values
+                    if (words.size() == 1)
                     {
-                        cmd = i;
-                        break;
+                        if (! it->second.execute() )
+                            std::cout << err_wrong_call_1 << words.front() << err_wrong_call_2 << std::endl;
+                    }
+                    else
+                    {
+                        if (! it->second.execute(std::vector<std::string>(words.begin()+1, words.end())))
+                            std::cout << err_wrong_call_p_1 << words.front() << err_wrong_call_p_2 << std::endl;
                     }
                 }
-                if (cmd == -1) //not a command
+                else
                 {
-                    //if no 'exit_cmd' command is defined, typing 'exit_cmd' leads to leave the 'run()' method of 'Cui'
-                    if (in == exit_cmd)
+                    if (in == exit_cmd) //TODO insert EXIT-COMMAND in container by constructor, method pointer = a new method of cui (e.g. exit())
                     {
                         std::cout << msg_exit << std::endl;
                         return;
                     }
                     std::cout << err << err_no_command_1 << words.front() << err_no_command_2 << std::endl;
-                    continue;
-                }
-                //words[1]...words[n] == values
-                if (words.size() == 1)
-                {
-                    if (!cmds[cmd].execute())
-                        std::cout << err_wrong_call_1 << words.front() << err_wrong_call_2 << std::endl;
-                }
-                else
-                {
-                    if (!cmds[cmd].execute(std::vector<std::string>(words.begin()+1, words.end())))
-                        std::cout << err_wrong_call_p_1 << words.front() << err_wrong_call_p_2 << std::endl;
                 }
             }
         }
