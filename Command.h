@@ -19,15 +19,19 @@ class Command
             mptr = 0;
             mptr_val = 0;
         }
+
         Command(FuncClass* obj, std::string name, void (FuncClass::*mptr)(), void (FuncClass::*mptr_val)(std::vector<std::string>)=0) : name(name), obj(obj), mptr(mptr), mptr_val(mptr_val)
         {
 
         }
+
+
     private:
         std::string name; //command name by which it is called
         FuncClass* obj; //object to execute function on
         void (FuncClass::*mptr)(); //pointer to function with no parameters
         void (FuncClass::*mptr_val)(std::vector<std::string>); //pointer to function with parameter
+
 
     public:
         std::string get_name()
@@ -35,9 +39,10 @@ class Command
             return name;
         }
 
-        void set(Command& other) //replace '*this' with 'other'
+        Command<FuncClass>& set(const Command<FuncClass>& other) //replace '*this' with 'other'
         {
-
+            *this = other;
+            return *this;
         }
 
         bool execute ()
@@ -49,6 +54,7 @@ class Command
             }
             return false;
         }
+
         bool execute(std::vector<std::string> values)
         {
             if (obj != 0 && mptr_val != 0)
