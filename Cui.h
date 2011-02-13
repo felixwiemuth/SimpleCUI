@@ -25,9 +25,9 @@ class Cui
             err = "Error: ";
             err_no_command_1 = "'";
             err_no_command_2 = "' is not a command!";
-            err_wrong_call_1 = "Error: No function defined to call '";
+            err_wrong_call_1 = "No function defined to call '";
             err_wrong_call_2 = "' without parameters!";
-            err_wrong_call_p_1 = "Error: No function defined to call '";
+            err_wrong_call_p_1 = "No function defined to call '";
             err_wrong_call_p_2 = "' with parameters!";
             err_no_object_defined_1 = "No object specified to execute '";
             err_no_object_defined_2 = "' on!";
@@ -90,8 +90,10 @@ class Cui
                             break;
                         case 3:
                             std::cout << err << err_wrong_call_1 << words.front() << err_wrong_call_2 << std::endl;
+                            break;
                         case 4:
                             std::cout << err << err_wrong_call_p_1 << words.front() << err_wrong_call_p_2 << std::endl;
+                            break;
                         default:
                             break;
                     }
