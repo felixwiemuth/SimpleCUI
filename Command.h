@@ -88,7 +88,7 @@ class Command
                 return ret;
             if (mptr_val == 0)
             {
-                return 3;
+                return 4;
             }
             ((*obj).*mptr_val)(values);
             return 0;
