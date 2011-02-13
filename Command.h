@@ -12,6 +12,9 @@
 template <class FuncClass>
 class Command
 {
+    typedef void (FuncClass::*Mptr)();
+    typedef void (FuncClass::*Mptr_val)(std::vector<std::string>);
+
     public:
         Command()
         {
@@ -20,7 +23,7 @@ class Command
             mptr_val = 0;
         }
 
-        Command(FuncClass* obj, void (FuncClass::*mptr)(), void (FuncClass::*mptr_val)(std::vector<std::string>)=0) : obj(obj), mptr(mptr), mptr_val(mptr_val)
+        Command(FuncClass* obj, Mptr mptr, Mptr_val mptr_val=0) : obj(obj), mptr(mptr), mptr_val(mptr_val)
         {
 
         }
@@ -38,8 +41,15 @@ class Command
             *this = other;
             return *this;
         }
+        Command<FuncClass>& set(FuncClass* obj, Mptr mptr, Mptr_val mptr_val=0) //'set(...)' as "constructor" version
+        {
+            this->obj = obj;
+            this->mptr = mptr;
+            this->mptr_val = mptr_val;
+            return *this;
+        }
 
-        bool execute ()
+        bool execute()
         {
             if (obj != 0 && mptr != 0)
             {
