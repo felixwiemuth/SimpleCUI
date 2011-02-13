@@ -24,3 +24,10 @@ CUI is a C++ library that provides an automatic, character-based user interface.
 Once included only an object of "Cui" has to be defined, commands with respective
 methods to be passed and the "run()" method to be called.
 Then your own program can be controlled by the user over CUI.
+
+
+-------------
+ Examples
+-------------
+
+See file "main.cpp" for documented demonstration of using Cui!
