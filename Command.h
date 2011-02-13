@@ -18,14 +18,16 @@ class Command
     public:
         Command()
         {
+            available = true;
+            err_msg = msg_not_available.end();
             obj = 0;
             mptr = 0;
             mptr_val = 0;
-            err_msg = msg_not_available.end();
         }
 
         Command(FuncClass* obj, Mptr mptr, Mptr_val mptr_val=0) : obj(obj), mptr(mptr), mptr_val(mptr_val)
         {
+            available = true;
             err_msg = msg_not_available.end();
         }
 
