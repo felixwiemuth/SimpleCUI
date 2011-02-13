@@ -91,8 +91,17 @@ class Cui
             }
         }
 
-        Command<FuncClass>& operator[] (const std::string s)
+        Command<FuncClass>& operator[] (const std::string& s)
         {
+//            cmds_iter it = cmds.find(s);
+//            if (it != cmds.end())
+//                return it->second;
+//            else
+//            {
+//                cmds.insert( make_pair(s, Command<FuncClass>()) );
+//            }
+            return cmds[s];
+            //Command<FuncClass> is = cmds[s];
 
         }
 
