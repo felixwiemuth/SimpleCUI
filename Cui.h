@@ -15,6 +15,8 @@
 template <class FuncClass>
 class Cui
 {
+    typedef typename std::map< std::string, Command<FuncClass> >::iterator cmds_iter;
+
     public:
         Cui()
         {
@@ -62,7 +64,7 @@ class Cui
                 std::vector<std::string> words;
                 boost::split(words, in, [](const char c)->bool{return c == ' ';});
                 //check if command
-                typename std::map< std::string, Command<FuncClass> >::iterator it = cmds.find(words.front());
+                cmds_iter it = cmds.find(words.front());
                 if (it != cmds.end())
                 {
                     //words[0] == command -- words[1]...words[n] == values
@@ -88,6 +90,12 @@ class Cui
                 }
             }
         }
+
+        Command<FuncClass>& operator[] (const std::string s)
+        {
+
+        }
+
 };
 
 
