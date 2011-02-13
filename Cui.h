@@ -9,96 +9,115 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/lexical_cast.hpp>
 #include <vector>
-#include <list>
+#include <map>
 
-struct Instruction
-{
-    std::string option; //ooption X called ("-X")
-    std::vector<std::string> values; //values A, B, C, ... added to the option ("-X A B C")
-
-    Instruction(std::string option, std::vector<std::string> values)
-    {
-        this->option = option;
-        this->values = values;
-    }
-};
 
 template <class FuncClass>
 class Cui
 {
-    //static members
-    static std::string error_msg;
+    typedef typename std::map< std::string, Command<FuncClass> >::iterator cmds_iter;
 
     public:
         Cui()
         {
+            exit_cmd = "exit";
+            msg_exit = "Leaving CUI environment...";
+            err = "Error: ";
+            err_no_command_1 = "'";
+            err_no_command_2 = "' is not a command!";
+            err_wrong_call_1 = "Error: No function defined to call '";
+            err_wrong_call_2 = "' without parameters!";
+            err_wrong_call_p_1 = "Error: No function defined to call '";
+            err_wrong_call_p_2 = "' with parameters!";
+            err_no_object_defined_1 = "No object specified to execute '";
+            err_no_object_defined_2 = "' on!";
+        }
 
-        }
+
     private:
-        std::vector< Command<FuncClass> > cmds;
+        std::map< std::string, Command<FuncClass> > cmds; //all possible commands
+        std::string exit_cmd; //command to leave 'run()' (can be overwritten by commands in 'cmds')
+        //messages
+        std::string msg_exit;
+        //error messages
+        std::string err;
+        std::string err_no_command_1;
+        std::string err_no_command_2;
+        std::string err_wrong_call_1;
+        std::string err_wrong_call_2;
+        std::string err_wrong_call_p_1;
+        std::string err_wrong_call_p_2;
+        std::string err_no_object_defined_1;
+        std::string err_no_object_defined_2;
+
+
     public:
-        void add_command(FuncClass* obj, std::string name, void (FuncClass::*mptr)(), void (FuncClass::*mptr_val)(std::vector<std::string>)=0)
-        {
-            cmds.push_back(Command<FuncClass>(obj, name, mptr, mptr_val));
-        }
-        void add_command(Command<FuncClass>& cmd)
-        {
-            cmds.push_back(cmd);
-        }
-        void start()
+        void run()
         {
             std::string in;
             while(true)
             {
+                std::cout << std::endl;
                 std::cout << "> ";
                 getline(std::cin, in);
                 std::cout << std::endl;
-                std::list<std::string> words;
+                std::vector<std::string> words;
                 boost::split(words, in, [](const char c)->bool{return c == ' ';});
                 //check if command
-                int cmd = -1;
-                for (int i = 0; i < cmds.size(); i++)
+                cmds_iter it = cmds.find(words.front());
+                if (it != cmds.end())
                 {
-                    if (cmds[i].get_name() == words.front())
+                    //words[0] == command -- words[1]...words[n] == values
+                    int execode; //exitcode
+
+                    //call method without/with paramter
+                    if (words.size() == 1)
+                        execode = it->second.execute();
+                    else
+                        execode = it->second.execute(std::vector<std::string>(words.begin()+1, words.end()));
+
+                    //print error message belonging to exitcode
+                    switch(execode)
                     {
-                        cmd = i;
-                        break;
+                        case 0:
+                            //everything o.k.
+                            break;
+                        case 1:
+                            //message sent by Command if enabled
+                            break;
+                        case 2:
+                            std::cout << err << err_no_object_defined_1 << words.front() << err_no_object_defined_2 << std::endl;
+                            break;
+                        case 3:
+                            std::cout << err << err_wrong_call_1 << words.front() << err_wrong_call_2 << std::endl;
+                        case 4:
+                            std::cout << err << err_wrong_call_p_1 << words.front() << err_wrong_call_p_2 << std::endl;
+                        default:
+                            break;
                     }
                 }
-                if (cmd == -1)
-                {
-                    //not a command
-                    std::cout << "ERROR: not a command" << std::endl; //DEBUG
-                    continue;
-                }
-
-                words.pop_front();
-                //words[0]...words[n] == values
-                std::cout << "WORDS.SIZE=" << words.size() << std::endl;
-                if (words.size() == 0)
-                    cmds[cmd].execute();
                 else
                 {
-                    cmds[cmd].execute(std::vector<std::string>(words.begin(), words.end()));
+                    if (words.front() == exit_cmd)
+                    {
+                        if (words.size() == 1)
+                        {
+                            std::cout << msg_exit << std::endl;
+                            return;
+                        }
+                        else
+                            std::cout << err << err_wrong_call_p_1 << words.front() << err_wrong_call_p_2 << std::endl;
+                    }
+                    else
+                        std::cout << err << err_no_command_1 << words.front() << err_no_command_2 << std::endl;
                 }
-
-
-
-//                std::vector<Instruction> instr;
-//                for (std::vector<std::string>::iterator it = words.begin(); it != words.end(); ++it)
-//                {
-//                    if ((*it)[0] != '-')
-//                    {
-//                        std::vector<std::string> options;
-//
-//                    }
-//
-//                }
-
             }
-
         }
 
+        Command<FuncClass>& operator[] (const std::string& s) //returns reference to command 's' in 'cmds' if available, otherwise adds command 's'
+        {
+            return cmds[s];
+        }
 };
 
 
