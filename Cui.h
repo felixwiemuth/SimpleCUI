@@ -44,14 +44,6 @@ class Cui
         std::string err_wrong_call_p_1;
         std::string err_wrong_call_p_2;
     public:
-//        void add_command(FuncClass* obj, std::string name, void (FuncClass::*mptr)(), void (FuncClass::*mptr_val)(std::vector<std::string>)=0)
-//        {
-//            cmds.push_back(Command<FuncClass>(obj, name, mptr, mptr_val));
-//        }
-//        void add_command(Command<FuncClass>& cmd)
-//        {
-//            cmds.push_back(cmd);
-//        }
         void run()
         {
             std::string in;
@@ -81,7 +73,7 @@ class Cui
                 }
                 else
                 {
-                    if (in == exit_cmd) //TODO insert EXIT-COMMAND in container by constructor, method pointer = a new method of cui (e.g. exit())
+                    if (in == exit_cmd)
                     {
                         std::cout << msg_exit << std::endl;
                         return;
@@ -95,7 +87,6 @@ class Cui
         {
             return cmds[s];
         }
-
 };
 
 
