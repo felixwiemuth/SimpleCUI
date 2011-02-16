@@ -54,6 +54,7 @@ class Cui
     public:
         void run()
         {
+            //TODO check if messages valid
             std::string in;
             while(true)
             {
