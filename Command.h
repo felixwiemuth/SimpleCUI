@@ -19,7 +19,7 @@ class Command
         Command()
         {
             available = true;
-            err_msg = msg_not_available.end();
+            err_msg = 0;
             obj = 0;
             mptr = 0;
             mptr_val = 0;
@@ -28,14 +28,14 @@ class Command
         Command(FuncClass* obj, Mptr mptr, Mptr_val mptr_val=0) : obj(obj), mptr(mptr), mptr_val(mptr_val)
         {
             available = true;
-            err_msg = msg_not_available.end();
+            err_msg = 0;
         }
 
 
     private:
         bool available; //methods in 'mptr' and 'mptr_val' can only be executed if set 'true' -- otherwise '*err_msg' is shown
-        std::vector<std::string> msg_not_available; //container of messages that include reasons why this method is not available
-        std::vector<std::string>::iterator err_msg; //activated not-available-message
+        std::vector<std::string> err_msg_store; //container of messages that include reasons why this method is not available
+        std::string* err_msg; //activated message of 'err_msg_store'
         FuncClass* obj; //object to execute function on
         void (FuncClass::*mptr)(); //pointer to function with no parameters
         void (FuncClass::*mptr_val)(std::vector<std::string>); //pointer to function with parameter
@@ -53,11 +53,27 @@ class Command
             return set(Command<FuncClass>(obj, mptr, mptr_val));
         }
 
+        void add_err_msg(std::string& s) //adds an error messages to the error message container
+        {
+            err_msg_store.push_back(s);
+        }
+
+        void set_err_msg(unsigned int n) //sets the active error message to string with index 'n' in 'err_msg_store'
+        {
+            if (n < err_msg_store.size())
+                err_msg = &err_msg_store[n];
+        }
+
+        void set_err_msg(std::string* s_ptr) //sets the active error message to the string 's_ptr' points to
+        {
+            err_msg = s_ptr;
+        }
+
         int check_valid() //return value: 0 = execution of 'mptr' or 'mptr_val' would be valid (regarding 'available' and 'obj') 1 = not available 2 = obj==0
         {
             if (!available)
             {
-                if (err_msg != msg_not_available.end())
+                if (err_msg != 0)
                     std::cout << *err_msg << std::endl;
                 return 1;
             }
