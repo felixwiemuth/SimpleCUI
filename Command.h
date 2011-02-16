@@ -53,7 +53,7 @@ class Command
             return set(Command<FuncClass>(obj, mptr, mptr_val));
         }
 
-        void add_err_msg(std::string& s) //adds an error messages to the error message container
+        void add_err_msg(std::string s) //adds an error messages to the error message container
         {
             err_msg_store.push_back(s);
         }
@@ -64,9 +64,21 @@ class Command
                 err_msg = &err_msg_store[n];
         }
 
-        void set_err_msg(std::string* s_ptr) //sets the active error message to the string 's_ptr' points to
+        void point_err_msg(std::string* s_ptr) //sets the active error message to the string 's_ptr' points to
         {
             err_msg = s_ptr;
+        }
+
+        void activate()
+        {
+            available = true;
+        }
+
+        void deactivate(unsigned int n = -1)
+        {
+            available = false;
+            if (n != -1)
+                set_err_msg(n);
         }
 
         int check_valid() //return value: 0 = execution of 'mptr' or 'mptr_val' would be valid (regarding 'available' and 'obj') 1 = not available 2 = obj==0
