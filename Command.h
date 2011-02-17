@@ -127,6 +127,16 @@ class Command
             ((*obj).*mptr_val)(values);
             return 0;
         }
+
+        void show_help()
+        {
+            if (help.length() != 0)
+                std::cout << help << std::endl;
+            else
+            {
+                std::cout << "No help for this command." << std::endl;
+            }
+        }
 };
 
 

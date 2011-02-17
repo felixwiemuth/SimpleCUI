@@ -21,8 +21,9 @@ class Cui
         Cui()
         {
             help_cmd = "help";
+            help_all_cmd = "commands";
             exit_cmd = "exit";
-            help = "This is Cui. Type 'help COMMAND' for information about commands";
+            reset_help();
             msg_exit = "Leaving CUI environment...";
             err = "Error: ";
             err_no_command_1 = "'";
@@ -39,6 +40,7 @@ class Cui
     private:
         std::map< std::string, Command<FuncClass> > cmds; //all possible commands
         std::string help_cmd; //command to show help (general or for command)
+        std::string help_all_cmd; //string to type behind 'help_cmd' to execute 'show_all_help()'
         std::string exit_cmd; //command to leave 'run()' (can be overwritten by commands in 'cmds')
         //messages
         std::string help; //help text
@@ -108,14 +110,19 @@ class Cui
                     if (words.front() == help_cmd)
                     {
                         if (words.size() == 1)
-                            std::cout << help << std::endl;
+                            std::cout << help;
                         else //words.size() > 1
                         {
                             cmd = cmds.find(words[1]);
                             if (cmd != cmds.end())
                                 cmd->second.show_help();
                             else
-                                std::cout << err << err_no_command_1 << words[1] << err_no_command_2 << std::endl;
+                            {
+                                if (words[1] == help_all_cmd)
+                                    show_all_help();
+                                else
+                                    std::cout << err << err_no_command_1 << words[1] << err_no_command_2 << std::endl;
+                            }
                         }
                     }
                     else if (words.front() == exit_cmd)
@@ -131,6 +138,21 @@ class Cui
                     else
                         std::cout << err << err_no_command_1 << words.front() << err_no_command_2 << std::endl;
                 }
+            }
+        }
+
+        void reset_help()
+        {
+            help = "Type 'help <command>' for information about commands!\n"
+                   "Type 'help " + help_all_cmd + "' for information about all commands!";
+        }
+
+        void show_all_help()
+        {
+            for (cmds_iter it = cmds.begin(); it != cmds.end(); ++it)
+            {
+                std::cout << "'" << it->first << "': ";
+                it->second.show_help();
             }
         }
 
