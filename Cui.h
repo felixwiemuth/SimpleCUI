@@ -20,7 +20,9 @@ class Cui
     public:
         Cui()
         {
+            help_cmd = "help";
             exit_cmd = "exit";
+            help = "This is Cui. Type 'help COMMAND' for information about commands";
             msg_exit = "Leaving CUI environment...";
             err = "Error: ";
             err_no_command_1 = "'";
@@ -36,9 +38,11 @@ class Cui
 
     private:
         std::map< std::string, Command<FuncClass> > cmds; //all possible commands
+        std::string help_cmd; //command to show help (general or for command)
         std::string exit_cmd; //command to leave 'run()' (can be overwritten by commands in 'cmds')
         //messages
-        std::string msg_exit;
+        std::string help; //help text
+        std::string msg_exit; //message on exit
         //error messages
         std::string err;
         std::string err_no_command_1;
@@ -54,7 +58,7 @@ class Cui
     public:
         void run()
         {
-            //TODO check if messages valid
+            //TODO check if messages valid / set to std
             std::string in;
             while(true)
             {
@@ -65,17 +69,17 @@ class Cui
                 std::vector<std::string> words;
                 boost::split(words, in, [](const char c)->bool{return c == ' ';});
                 //check if command
-                cmds_iter it = cmds.find(words.front());
-                if (it != cmds.end())
+                cmds_iter cmd = cmds.find(words.front());
+                if (cmd != cmds.end())
                 {
                     //words[0] == command -- words[1]...words[n] == values
                     int execode; //exitcode
 
                     //call method without/with paramter
                     if (words.size() == 1)
-                        execode = it->second.execute();
+                        execode = cmd->second.execute();
                     else
-                        execode = it->second.execute(std::vector<std::string>(words.begin()+1, words.end()));
+                        execode = cmd->second.execute(std::vector<std::string>(words.begin()+1, words.end()));
 
                     //print error message belonging to exitcode
                     switch(execode)
@@ -101,7 +105,20 @@ class Cui
                 }
                 else
                 {
-                    if (words.front() == exit_cmd)
+                    if (words.front() == help_cmd)
+                    {
+                        if (words.size() == 1)
+                            std::cout << help << std::endl;
+                        else //words.size() > 1
+                        {
+                            cmd = cmds.find(words[1]);
+                            if (cmd != cmds.end())
+                                cmd->second.show_help();
+                            else
+                                std::cout << err << err_no_command_1 << words[1] << err_no_command_2 << std::endl;
+                        }
+                    }
+                    else if (words.front() == exit_cmd)
                     {
                         if (words.size() == 1)
                         {
