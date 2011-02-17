@@ -36,6 +36,7 @@ class Command
         bool available; //methods in 'mptr' and 'mptr_val' can only be executed if set 'true' -- otherwise '*err_msg' is shown
         std::vector<std::string> err_msg_store; //container of messages that include reasons why this method is not available
         std::string* err_msg; //activated message of 'err_msg_store'
+        std::string help; //description of this command
         FuncClass* obj; //object to execute function on
         void (FuncClass::*mptr)(); //pointer to function with no parameters
         void (FuncClass::*mptr_val)(std::vector<std::string>); //pointer to function with parameter
@@ -51,6 +52,11 @@ class Command
         Command<FuncClass>& set(FuncClass* obj, Mptr mptr, Mptr_val mptr_val=0) //'set(...)' as "constructor" version
         {
             return set(Command<FuncClass>(obj, mptr, mptr_val));
+        }
+
+        void set_help(std::string s)
+        {
+            help = s;
         }
 
         void add_err_msg(std::string s) //adds an error messages to the error message container
