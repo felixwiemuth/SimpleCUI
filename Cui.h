@@ -110,7 +110,7 @@ class Cui
                     if (words.front() == help_cmd)
                     {
                         if (words.size() == 1)
-                            std::cout << help;
+                            std::cout << help << std::endl;
                         else //words.size() > 1
                         {
                             cmd = cmds.find(words[1]);
