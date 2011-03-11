@@ -42,8 +42,10 @@ int main()
     testvals.push_back("TestValue");
 
     //examples of correct using
-    cui["valmeth"].set(Command<TestClass>(&myobj, 0, &TestClass::mymeth)).execute(testvals);
+    cui["valmeth"].set(&myobj, 0, &TestClass::mymeth).execute(testvals);
+    cui["valmeth"].set_help("A method to demonstrate commands with values");
     cui["sample"].set(&myobj, &TestClass::sample_method);
+    cui["sample"].set_help("A method to demonstrate simple commands without parameters");
     //examples of no-good using
     //NOTE: Even if you intend to set the missing values later,
     //      it is not guaranteed that the user calls an invalid method in meantime!
@@ -55,6 +57,15 @@ int main()
 
     //example of overwriting standard "exit" of Cui
     cui["exit"].set(&myobj, &TestClass::exit_program);
+
+    //test activation/deactivation, error messages
+    std::string testerr = "mauuerr!";
+    cui["valmeth"].point_err_msg(&testerr);
+    cui["valmeth"].deactivate();
+    cui["valmeth"].activate();
+    cui["sample"].add_err_msg("soenke ERR1!!!");
+    cui["sample"].set_err_msg(0);
+    cui["sample"].deactivate();
 
     cui.run();
 
