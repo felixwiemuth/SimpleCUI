@@ -48,7 +48,7 @@ int main()
     cui["sample"].set_help("A method to demonstrate simple commands without parameters");
     //examples of no-good using
     //NOTE: Even if you intend to set the missing values later,
-    //      it is not guaranteed that the user calls an invalid method in meantime!
+    //      it is not guaranteed that the user does not call an invalid method in meantime!
     //      (Anyway this will cause no crashes because Cui is careful)
     //      In that case you should better set the needed values,
     //      turn the "available"-switch off and set a "not-available"-message!
