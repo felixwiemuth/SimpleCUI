@@ -20,6 +20,9 @@ class Cui
     public:
         Cui()
         {
+            version = "1.0.5 Release";
+            msg_version = "Version of CUI: ";
+            version_cmd = "version";
             help_cmd = "help";
             help_all_cmd = "commands";
             show_all_cmd = "commands";
@@ -41,13 +44,18 @@ class Cui
 
     private:
         std::map< std::string, Command<FuncClass> > cmds; //all possible commands
+        //version string
+        std::string version;
+        //pre-defined commands
         std::string help_cmd; //command to show help (general or for command)
         std::string help_all_cmd; //string to type behind 'help_cmd' to execute 'show_all_help()'
         std::string show_all_cmd; //command to show all available commands
+        std::string version_cmd; //command to show version of CUI (the lib)
         std::string exit_cmd; //command to leave 'run()' (can be overwritten by commands in 'cmds')
         //messages
         std::string help; //help text
         std::string msg_all_commands; //message to show before printing all available commands
+        std::string msg_version; //text to show before version number
         std::string msg_exit; //message on exit
         //error messages
         std::string err;
@@ -130,6 +138,10 @@ class Cui
                             }
                         }
                     }
+                    else if (words.front() == version_cmd)
+                    {
+                        std::cout << msg_version << version << std::endl;
+                    }
                     //all following options are commands without values
                     else if (words.size() == 1)
                     {
@@ -157,7 +169,8 @@ class Cui
         {
             help = "Type 'help <command>' for information about one command!\n"
                    "Type '" + show_all_cmd + "' for a list of all available commands!\n"
-                   "Type 'help " + help_all_cmd + "' for information about all commands!";
+                   "Type 'help " + help_all_cmd + "' for information about all commands!\n"
+                   "Type '" + version_cmd + "' to show version of CUI!";
         }
 
         void show_all_help()
