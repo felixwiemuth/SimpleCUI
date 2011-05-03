@@ -60,12 +60,12 @@ int main()
 
     //test activation/deactivation, error messages
     std::string testerr = "mauuerr!";
-    cui["valmeth"].point_err_msg(&testerr);
-    cui["valmeth"].deactivate();
-    cui["valmeth"].activate();
-    cui["sample"].add_err_msg("soenke ERR1!!!");
-    cui["sample"].set_err_msg(0);
-    cui["sample"].deactivate();
+    cui["valmeth"].point_err_msg(&testerr); //set an own string ('testerr') as error message for this command
+    cui["valmeth"].deactivate(); //deactivate comman "valmeth"
+    cui["valmeth"].activate(); //reactivate comman "valmeth"
+    cui["sample"].add_err_msg("This command is not available!"); //error message to show when command not available
+    cui["sample"].set_err_msg(0); //activate added error message
+    cui["sample"].deactivate(); //deactivate command "sample"
 
     cui.run();
 
