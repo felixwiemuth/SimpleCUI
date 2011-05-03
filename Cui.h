@@ -20,7 +20,7 @@ class Cui
     public:
         Cui()
         {
-            version = "1.0.5 Release";
+            version = "1.0.6 Release";
             msg_version = "Version of CUI: ";
             version_cmd = "version";
             help_cmd = "help";
