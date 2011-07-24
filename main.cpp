@@ -59,10 +59,10 @@ int main()
     cui["exit"].set(&myobj, &TestClass::exit_program);
 
     //test activation/deactivation, error messages
-    std::string testerr = "mauuerr!";
+    std::string testerr = "This is an error!";
     cui["valmeth"].point_err_msg(&testerr); //set an own string ('testerr') as error message for this command
-    cui["valmeth"].deactivate(); //deactivate comman "valmeth"
-    cui["valmeth"].activate(); //reactivate comman "valmeth"
+    cui["valmeth"].deactivate(); //deactivate command "valmeth"
+    cui["valmeth"].activate(); //reactivate command "valmeth"
     cui["sample"].add_err_msg("This command is not available!"); //error message to show when command not available
     cui["sample"].set_err_msg(0); //activate added error message
     cui["sample"].deactivate(); //deactivate command "sample"
